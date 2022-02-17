@@ -5,6 +5,7 @@ import org.mariadb.jdbc.MariaDbDataSource;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
 
@@ -19,16 +20,23 @@ public class Main {
             }
 
             Flyway flyway = Flyway.configure().dataSource(datasource).load();
+//            flyway.clean();
             flyway.migrate();
 
             ActorsRepository actorsRepository = new ActorsRepository(datasource);
 
             MoviesRepository moviesRepository = new MoviesRepository(datasource);
-            moviesRepository.saveMovie("Titanic", LocalDate.of(1997,12,12));
-            moviesRepository.saveMovie("It", LocalDate.of(2007,5,2));
+
+            ActorsMoviesRepository actorsMoviesRepository = new ActorsMoviesRepository(datasource);
+            ActorsMoviesService service = new ActorsMoviesService(actorsRepository, moviesRepository, actorsMoviesRepository);
+            service.insertMovieWithActors("Titanic", LocalDate.of(1997, 11,13), List.of("Leonardo DiCaprio",
+                    "Kate Winslet"));
+//            moviesRepository.saveMovie("Titanic", LocalDate.of(1997,12,12));
+//            moviesRepository.saveMovie("It", LocalDate.of(2007,5,2));
 
 //            actorsRepository.saveActor("John Doe");
+//            System.out.println(actorsRepository.findActorByName("John Doe"));
 
-        System.out.println(actorsRepository.findActorsWithPrefix("J"));
+//        System.out.println(actorsRepository.findActorsWithPrefix("J"));
     }
 }

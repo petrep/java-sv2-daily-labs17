@@ -35,6 +35,9 @@ class ActorsRepositoryTest {
     }
     @Test
     void testInsert(){
-        actorsRepository.saveActor("Jack Doe");
+        //actorsRepository.saveActor("Jack Doe");
+
     }
+
+
 }
