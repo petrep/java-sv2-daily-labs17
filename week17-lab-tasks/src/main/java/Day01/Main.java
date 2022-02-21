@@ -20,7 +20,7 @@ public class Main {
             }
 
             Flyway flyway = Flyway.configure().dataSource(datasource).load();
-//            flyway.clean();
+            flyway.clean();
             flyway.migrate();
 
             ActorsRepository actorsRepository = new ActorsRepository(datasource);
@@ -28,9 +28,16 @@ public class Main {
             MoviesRepository moviesRepository = new MoviesRepository(datasource);
 
             ActorsMoviesRepository actorsMoviesRepository = new ActorsMoviesRepository(datasource);
-            ActorsMoviesService service = new ActorsMoviesService(actorsRepository, moviesRepository, actorsMoviesRepository);
-            service.insertMovieWithActors("Titanic", LocalDate.of(1997, 11,13), List.of("Leonardo DiCaprio",
+            RatingsRepository ratingsRepository = new RatingsRepository(datasource);
+            ActorsMoviesService actorsMoviesService = new ActorsMoviesService(actorsRepository, moviesRepository, actorsMoviesRepository);
+            actorsMoviesService.insertMovieWithActors("Titanic", LocalDate.of(1997, 11,13), List.of("Leonardo DiCaprio",
                     "Kate Winslet"));
+            MoviesRatingService moviesRatingService = new MoviesRatingService(moviesRepository, ratingsRepository);
+
+            // Here if one of the ratings is invalid, then none of the ratings will be added:
+            moviesRatingService.addRatings("Titanic", 5,4,2);
+
+
 //            moviesRepository.saveMovie("Titanic", LocalDate.of(1997,12,12));
 //            moviesRepository.saveMovie("It", LocalDate.of(2007,5,2));
 
